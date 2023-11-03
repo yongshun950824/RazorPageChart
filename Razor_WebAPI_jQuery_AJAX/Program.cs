@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Razor_WebAPI_Application
+namespace Razor_WebAPI_jQuery_AJAX
 {
     public class Program
     {

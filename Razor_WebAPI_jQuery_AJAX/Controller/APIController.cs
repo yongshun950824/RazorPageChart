@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Razor_WebAPI_Application.Models;
+using Razor_WebAPI_jQuery_AJAX.Models;
 
-namespace Razor_WebAPI_Application.Controllers
+namespace Razor_WebAPI_jQuery_AJAX.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class APIController : ControllerBase
+    public class AjaxAPIController : ControllerBase
     {
         public ChartData chartData = new ChartData();
 
