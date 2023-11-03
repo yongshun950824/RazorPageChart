@@ -1,0 +1,101 @@
+﻿@page
+@model Razor_WebAPI_Application.Pages.IndexModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <input type="button" id="btnGet" value="Update Chart Data" />
+    <input type="button" id="btnGet2" value="Update Chart Data 2" />
+
+    <canvas id="myScatterChart" width="400" height="200"></canvas>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        var myScatterChart;
+
+        // Function for update chart data
+        function updateScatterChart(data) {
+            console.log("update scatter chart is executed.");
+
+            var x = data.x;
+            var y = data.y;
+
+            var chartData = {
+                datasets: [{
+                    label: "Punti",
+                    data: x.map((value, index) => ({ x: value, y: y[index] })),
+                    pointRadius: 5, 
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                }]
+            };
+
+            // Get the Chart
+            var ctxScatter = document.getElementById('myScatterChart').getContext('2d');
+
+            // If exists, destroy
+            if (myScatterChart) {
+                myScatterChart.destroy();
+            }
+
+            myScatterChart = new Chart(ctxScatter, {
+                type: 'scatter',
+                data: chartData,
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Coordinate X'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Coordinate Y'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        //  When the button 1 is clicked, get  data from the controller and update the chart
+        $("#btnGet").click(function () {
+            console.log("button 1 click is executed.");
+            $.get("/api/AjaxAPI/ChartDataJson", function (data) {
+                updateScatterChart(data);
+            });
+        });
+
+        //  When the button 2 is clicked, get  data from the controller and update the chart
+        $("#btnGet2").click(function () {
+            console.log("button 2 click is executed.");
+            $.get("/api/AjaxAPI/ChartDataJson2", function (data) {
+                updateScatterChart(data);
+            });
+        });
+
+        // Update the data chart when a post request is received
+        $.post("/api/AjaxAPI/UpdateChartData", function (data) {
+            console.log("X values:", data.x);
+            console.log("Y values:", data.y);
+            updateScatterChart(data);
+        });
+    </script>
+</body>
+</html>
