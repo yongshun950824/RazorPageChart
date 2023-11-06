@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Razor_WebAPI_jQuery_AJAX.Models;
 using Microsoft.AspNetCore.SignalR;
@@ -48,19 +44,12 @@ namespace Razor_WebAPI_jQuery_AJAX.Controllers
         [Route("UpdateChartData")]
         public IActionResult UpdateChartData([FromBody] ChartData data)
         {
-            // Read received data
-            var newDataX = data.X; 
-            var newDataY = data.Y;
-           // var chartData = new { x = new List<double>[] { newDataX }, y = new List<double>[] { newDataY } };
-
             var chartData = new
             {
                 x = data.X,
                 y = data.Y
             };
-
             _hubContext.Clients.All.SendAsync("UpdateChart", chartData);
-
             return Ok(chartData);
         }
     }

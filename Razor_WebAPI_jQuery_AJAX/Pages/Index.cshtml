@@ -17,7 +17,6 @@
     <input type="button" id="btnGet2" value="Update Chart Data 2" />
     <input type="button" id="btnPost" value="Update Chart Data (Post)" />
 
-
     <canvas id="myScatterChart" width="400" height="200"></canvas>
 
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
@@ -92,13 +91,6 @@
                 updateScatterChart(data);
             });
         });
-
-        // Update the data chart when a post request is received
-        //$.post("/api/AjaxAPI/UpdateChartData", function (data) {
-        //    console.log("X values:", data.x);
-        //   console.log("Y values:", data.y);
-        //    updateScatterChart(data);
-        //});
 
         var connection = new signalR.HubConnectionBuilder().withUrl("/chartHub").build();
 
