@@ -15,10 +15,12 @@
     @Html.AntiForgeryToken()
     <input type="button" id="btnGet" value="Update Chart Data" />
     <input type="button" id="btnGet2" value="Update Chart Data 2" />
+    <input type="button" id="btnPost" value="Update Chart Data (Post)" />
 
 
     <canvas id="myScatterChart" width="400" height="200"></canvas>
 
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript">
 
@@ -35,7 +37,7 @@
                 datasets: [{
                     label: "Punti",
                     data: x.map((value, index) => ({ x: value, y: y[index] })),
-                    pointRadius: 5, 
+                    pointRadius: 5,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.5)',
                 }]
@@ -92,11 +94,24 @@
         });
 
         // Update the data chart when a post request is received
-        $.post("/api/AjaxAPI/UpdateChartData", function (data) {
-            console.log("X values:", data.x);
-            console.log("Y values:", data.y);
+        //$.post("/api/AjaxAPI/UpdateChartData", function (data) {
+        //    console.log("X values:", data.x);
+        //   console.log("Y values:", data.y);
+        //    updateScatterChart(data);
+        //});
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chartHub").build();
+
+        connection.on("UpdateChart", function (data) {
             updateScatterChart(data);
         });
+
+        connection.start().then(function () {
+
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
     </script>
 </body>
 </html>

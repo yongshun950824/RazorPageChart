@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Razor_WebAPI_jQuery_AJAX.Models;
+using Microsoft.AspNetCore.SignalR;
+using Razor_WebAPI_Application.Hubs;
 
 namespace Razor_WebAPI_jQuery_AJAX.Controllers
 {
@@ -13,6 +15,12 @@ namespace Razor_WebAPI_jQuery_AJAX.Controllers
     public class AjaxAPIController : ControllerBase
     {
         public ChartData chartData = new ChartData();
+
+        private readonly IHubContext<ChartHub> _hubContext;
+        public AjaxAPIController(IHubContext<ChartHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
 
         [HttpGet]
         [Route("ChartDataJson")]
@@ -43,7 +51,16 @@ namespace Razor_WebAPI_jQuery_AJAX.Controllers
             // Read received data
             var newDataX = data.X; 
             var newDataY = data.Y;
-            var chartData = new { x = new List<double>[] { newDataX }, y = new List<double>[] { newDataY } };
+           // var chartData = new { x = new List<double>[] { newDataX }, y = new List<double>[] { newDataY } };
+
+            var chartData = new
+            {
+                x = data.X,
+                y = data.Y
+            };
+
+            _hubContext.Clients.All.SendAsync("UpdateChart", chartData);
+
             return Ok(chartData);
         }
     }

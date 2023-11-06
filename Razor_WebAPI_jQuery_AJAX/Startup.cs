@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
+using Razor_WebAPI_Application.Hubs;
 
 namespace Razor_WebAPI_jQuery_AJAX
 {
@@ -21,6 +22,8 @@ namespace Razor_WebAPI_jQuery_AJAX
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                     .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +38,11 @@ namespace Razor_WebAPI_jQuery_AJAX
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChartHub>("/chartHub");
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
